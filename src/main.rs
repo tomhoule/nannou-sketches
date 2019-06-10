@@ -121,6 +121,74 @@ fn app_01() {
 }
 
 fn main() {
-    // nannou::sketch(sketch_03);
-    app_01()
+    nannou::sketch(sketch_04);
+    // app_01()
+}
+
+fn sketch_04(app: &nannou::App, frame: nannou::Frame) -> nannou::Frame {
+    frame.clear(nannou::color::WHITE);
+
+    const SIDE: f32 = 16.0;
+    const GAP: f32 = 2.0;
+
+    let draw = app.draw();
+    let window_rect = app.window_rect();
+
+    let mut cursor = window_rect.top_left();
+
+    while cursor.y > window_rect.bottom_right().y {
+        let points: Vec<Point2> = vec![
+            // Top left
+            cursor,
+            // Top right
+            Point2 {
+                x: cursor.x + SIDE,
+                y: cursor.y,
+            },
+            // Higher-middle right
+            Point2 {
+                x: cursor.x + (SIDE * 1.5),
+                y: cursor.y - (SIDE * 0.5),
+            },
+            // Lower-middle right
+            Point2 {
+                x: cursor.x + (SIDE * 1.5),
+                y: cursor.y - (SIDE * 1.5),
+            },
+            // Bottom right
+            Point2 {
+                x: cursor.x + SIDE,
+                y: cursor.y - (SIDE * 2.0),
+            },
+            // Bottom left
+            Point2 {
+                x: cursor.x,
+                y: cursor.y - (SIDE * 2.0),
+            },
+            Point2 {
+                x: cursor.x - (SIDE * 0.5),
+                y: cursor.y - (SIDE * 1.5),
+            },
+            Point2 {
+                x: cursor.x - (SIDE * 0.5),
+                y: cursor.y - (SIDE * 0.5),
+            },
+        ];
+        draw.polygon()
+            .points(points)
+            .color(nannou::color::RED)
+            .finish()
+            .unwrap();
+
+        cursor.x += (SIDE * 2.0) + GAP;
+
+        if cursor.x > window_rect.top_right().x {
+            cursor.y -= (SIDE * 2.0) + GAP;
+            cursor.x = window_rect.top_left().x;
+        }
+    }
+
+    draw.to_frame(app, &frame).unwrap();
+
+    frame
 }
