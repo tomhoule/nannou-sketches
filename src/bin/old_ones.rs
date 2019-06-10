@@ -126,12 +126,12 @@ fn main() {
 }
 
 fn sketch_04(app: &nannou::App, frame: nannou::Frame) -> nannou::Frame {
+    let draw = app.draw();
     frame.clear(nannou::color::WHITE);
 
     const SIDE: f32 = 16.0;
     const GAP: f32 = 2.0;
 
-    let draw = app.draw();
     let window_rect = app.window_rect();
 
     let mut cursor = window_rect.top_left();
