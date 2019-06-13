@@ -2,7 +2,7 @@ use nannou::prelude::*;
 
 const DIST: f32 = 35.0;
 const BOX_RADIUS: f32 = DIST / 2.0;
-const SPEED: f32 = 0.0005;
+const SPEED: f32 = 0.005;
 
 struct Node {
     box_center: Point2,
@@ -57,7 +57,7 @@ struct Net {
     h: f32,
     rows: u32,
     per_row: usize,
-    nodes: std::cell::RefCell<Vec<Node>>,
+    nodes: Vec<Node>,
 }
 
 impl Net {
@@ -93,7 +93,7 @@ impl Net {
         }
 
         Net {
-            nodes: std::cell::RefCell::new(nodes),
+            nodes,
             rows,
             per_row,
             w: window_rect.w(),
@@ -101,8 +101,8 @@ impl Net {
         }
     }
 
-    fn tick(&self, elapsed: std::time::Duration) {
-        for node in self.nodes.borrow_mut().iter_mut() {
+    fn tick(&mut self, elapsed: std::time::Duration) {
+        for node in self.nodes.iter_mut() {
             node.tick(elapsed);
         }
     }
@@ -111,12 +111,7 @@ impl Net {
         frame.clear(nannou::color::DARK_BLUE);
         let draw = app.draw();
 
-        let elapsed: std::time::Duration = app.duration.since_prev_update;
-        model.tick(elapsed);
-
-        let nodes = model.nodes.borrow();
-
-        for (idx, node) in nodes.iter().enumerate() {
+        for (idx, node) in model.nodes.iter().enumerate() {
             // draw.ellipse()
             //     .color(nannou::color::RED)
             //     .radius(3.0)
@@ -141,7 +136,7 @@ impl Net {
             //     .finish()
             //     .unwrap();
 
-            nodes.get(idx + (model.per_row)).map(|bottom| {
+            model.nodes.get(idx + (model.per_row)).map(|bottom| {
                 draw.line()
                     .points(node.current_pos.into(), bottom.current_pos.into());
             });
@@ -150,7 +145,7 @@ impl Net {
                 continue;
             }
 
-            nodes.get(idx + 1).map(|right| {
+            model.nodes.get(idx + 1).map(|right| {
                 draw.line()
                     .points(node.current_pos.into(), right.current_pos.into());
             });
@@ -167,8 +162,15 @@ impl Net {
 
         frame
     }
+
+    fn update(app: &App, model: &mut Self, update: nannou::event::Update) {
+        model.tick(update.since_last);
+    }
 }
 
 fn main() {
-    nannou::app(Net::new).view(Net::view).run();
+    nannou::app(Net::new)
+        .view(Net::view)
+        .update(Net::update)
+        .run();
 }
