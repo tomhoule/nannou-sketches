@@ -22,7 +22,7 @@ impl Model {
         let radius = elapsed.as_millis() as f32 / 100.0;
         self.angle += since_last.as_millis() as f32 / ((radius + 50.0) * 2.0);
 
-        let drawn_radius = radius + (elapsed.as_micros() as f32 / 30000.0).sin() * (radius / 22.0);
+        let drawn_radius = radius + (elapsed.as_micros() as f32 / 30000.0).sin() * (radius / 16.0);
         self.poses.push(Point2 {
             x: drawn_radius * self.angle.cos(),
             y: drawn_radius * self.angle.sin(),
