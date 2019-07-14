@@ -9,7 +9,6 @@ struct Model {
 impl Model {
     fn new(app: &App) -> Self {
         app.new_window().build().unwrap();
-        // let window_rect = app.window_rect();
 
         Model {
             cursor: Point2 { x: 0.0, y: 0.0 },
