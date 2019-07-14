@@ -60,11 +60,4 @@ impl Model {
     }
 }
 
-fn main() -> Result<(), failure::Error> {
-    nannou::app(Model::new)
-        .view(Model::view)
-        .update(Model::update)
-        .run();
-
-    Ok(())
-}
+doodle::main!(Model);
